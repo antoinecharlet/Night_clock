@@ -1,0 +1,22 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:background="#000"
+    tools:context="com.example.afreu.testclock.FullscreenActivity">
+
+
+    <com.lb.auto_fit_textview.AutoResizeTextView
+        android:id="@+id/text_heure"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="00:00"
+        android:textColor="#f00"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textSize="1000sp"
+        android:maxLines="1"/>
+
+
+</FrameLayout>

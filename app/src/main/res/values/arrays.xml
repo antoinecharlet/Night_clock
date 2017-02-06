@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_font_list_titles_ar">
+        <item>12:34</item>
+        <item>12:34</item>
+        <item>12:34</item>
+        <item>12:34</item>
+        <item>12:34</item>
+    </string-array>
+    <string-array name="pref_font_list_titles_values_ar">
+        <item>Digital Dismay.otf</item>
+        <item>wwDigital.ttf</item>
+        <item>Digital System.ttf</item>
+        <item>Dotrice-Regular.otf</item>
+        <item>MOZART_0.ttf</item>
+    </string-array>
+</resources>

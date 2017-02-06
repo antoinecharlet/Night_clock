@@ -1,15 +1,21 @@
 package com.example.afreu.testclock;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.afreu.testclock.com.example.afreu.testclock.setting.SettingsActivity;
 import com.lb.auto_fit_textview.AutoResizeTextView;
 
 import java.text.SimpleDateFormat;
@@ -20,7 +26,7 @@ import java.util.Locale;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class FullscreenActivity extends AppCompatActivity {
+public class FullscreenActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -46,6 +52,8 @@ public class FullscreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
 
         setContentView(R.layout.activity_fullscreen);
         setTextViewHour();
@@ -53,10 +61,8 @@ public class FullscreenActivity extends AppCompatActivity {
 
     private void setTextViewHour() {
         textView = (AutoResizeTextView) findViewById(R.id.text_heure);
-        AssetManager am = getApplicationContext().getAssets();
 
-        Typeface typeface = Typeface.createFromAsset(am,
-                String.format(Locale.US, "fonts/%s", "digital-7.ttf"));
+        Typeface typeface = getTypeFaceFromPreferences();
 
         textView.setTypeface(typeface);
 
@@ -74,10 +80,25 @@ public class FullscreenActivity extends AppCompatActivity {
         }, 10);
     }
 
+    private Typeface getTypeFaceFromPreferences() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String storedPreference = preferences.getString("font_code", getResources().getString(R.string.default_font));
+
+        AssetManager am = getApplicationContext().getAssets();
+        return Typeface.createFromAsset(am,
+                String.format(Locale.FRANCE, "fonts/%s", storedPreference));
+    }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         delayedHide(100);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if ("font_code".equals(key))
+            setTextViewHour();
     }
 
     /**
@@ -133,6 +154,33 @@ public class FullscreenActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            lancerParametres();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void lancerParametres() {
+        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+    }
 
     @SuppressLint("InlinedApi")
     private void show() {
